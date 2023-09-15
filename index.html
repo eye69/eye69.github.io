@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/f92fdb375c.js" crossorigin="anonymous"></script>
+
+    <title>eye</title>
+
+    <script src="/cdn-cgi/apps/head/vWvHkqI6PMiucyf16iiwsHKUQ_I.js"></script>
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="text.js" defer></script>
+  </head>
+  <body>
+    <div class="hero-text">
+      <h1 class="hero-text-header">eye<b class="ong">.navy</b></h1>
+      <p class="hero-text-description"></p>
+    </div>
+    <style>
+      #video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        pointer-events: none;
+      }
+    </style>
+
+    <audio id="background-audio" src="themea.mp3"></audio>
+
+    <div class="button-wrapper">
+      <a class="button primary" id="play-button">Music</a>
+    </div>
+
+    <script>
+      const playButton = document.getElementById('play-button');
+      const audio = document.getElementById('background-audio');
+
+      playButton.addEventListener('click', function () {
+        audio.play();
+        playButton.style.display = 'none'; // Hide the button after clicking
+      });
+
+      const oldVideo = document.querySelector('#video-background');
+      if (oldVideo) {
+        oldVideo.parentNode.removeChild(oldVideo); // remove existing video element
+      }
+
+      const newVideo = document.createElement('video');
+      newVideo.id = 'video-background';
+      newVideo.src = 'https://cdn.discordapp.com/attachments/1107174006420930620/1152114145605468210/download.mp4';
+      newVideo.autoplay = true;
+      newVideo.loop = true;
+      newVideo.muted = true;
+      newVideo.controls = false;
+      newVideo.disablePictureInPicture = true;
+      newVideo.playsInline = true;
+      newVideo.classList.add('fullscreen', 'bg-video');
+      document.body.appendChild(newVideo);
+    </script>
+  </body>
+</html>
