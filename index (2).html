@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Site</title>
+    <style>
+      body {
+        background-color: #080707;
+      }
+
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+      }
+
+      #profile-container {
+        width: 450px;
+        height: 450px;
+        margin: auto;
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px #ffffff;
+      }
+
+      #profile-pic {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-image: url('https://i.ibb.co/PQWmmQT/ha.png');
+        background-size: cover;
+      }
+
+      #username {
+        font-size: 30px;
+        font-weight: bold;
+        color: #ffffff;
+        margin-top: 20px;
+        text-align: center;
+        font-family: 'Orbitron', sans-serif;
+        text-shadow: 0px 0px 10px #ffffff;
+        cursor: pointer;
+      }
+
+      #icons-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+
+      .icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 15px;
+        background-size: cover;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .icon:hover {
+        transform: scale(1.2);
+      }
+
+      #discord-icon {
+        background-image: url('image1.png');
+      }
+
+      #instagram-icon {
+        background-image: url('image2.png');
+      }
+
+      #tiktok-icon {
+        background-image: url('image3.png');
+      }
+
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+      @media only screen and (max-width: 600px) {
+        body {
+          background-size: auto 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <div id="profile-container">
+      <div id="profile-pic"></div>
+      <div id="username" onclick="window.location.href='https://lay.rip/xp'">@eye</div>
+      <div id="icons-container">
+        <a href="https://discord.gg/alvi"><div class="icon" id="discord-icon"></div></a>
+        <a href="https://www.instagram.com/eye.user"><div class="icon" id="instagram-icon"></div></a>
+        <a href="https://tiktok.com/@user167849926"><div class="icon" id="tiktok-icon"></div></a>
+      </div>
+    </div>
+
+    <script>
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  var width = canvas.width = window.innerWidth;
+  var height = canvas.height = window.innerHeight;
+
+  var dots = [];
+  var numDots = 100;
+  var connectDistance = 200;
+  var maxSpeed = 0.5;
+
+  function Dot(x, y) {
+    this.x = x;
+    this.y = y;
+    this.speedX = Math.random() * maxSpeed * 2 - maxSpeed;
+    this.speedY = Math.random() * maxSpeed * 2 - maxSpeed;
+  }
+
+  Dot.prototype.move = function() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+
+    if (this.x > width) {
+      this.x = 0;
+    } else if (this.x < 0) {
+      this.x = width;
+    }
+
+    if (this.y > height) {
+      this.y = 0;
+    } else if (this.y < 0) {
+      this.y = height;
+    }
+  };
+
+  Dot.prototype.draw = function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2, false);
+    ctx.fill();
+  };
+
+  function connectDots() {
+    for (var i = 0; i < numDots; i++) {
+      for (var j = i + 1; j < numDots; j++) {
+        var distance = Math.sqrt(
+          Math.pow(dots[i].x - dots[j].x, 2) + Math.pow(dots[i].y - dots[j].y, 2)
+        );
+        if (distance < connectDistance) {
+          ctx.strokeStyle = 'rgba(255, 255, 255, ' + (1 - distance / connectDistance) + ')';
+          ctx.beginPath();
+          ctx.moveTo(dots[i].x, dots[i].y);
+          ctx.lineTo(dots[j].x, dots[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, width, height);
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].move();
+      dots[i].draw();
+    }
+    connectDots();
+    requestAnimationFrame(loop);
+  }
+
+  for (var i = 0; i < numDots; i++) {
+    dots.push(new Dot(Math.random() * width, Math.random() * height));
+  }
+
+  loop();
+</script>
+      </div>
+    </div>
+  </body>
+</html>
