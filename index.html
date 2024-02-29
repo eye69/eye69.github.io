@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://kit.fontawesome.com/f92fdb375c.js" crossorigin="anonymous"></script>
 
-    <title>eye</title>
+    <title id="typing-title"></title>
 
     <script src="/cdn-cgi/apps/head/vWvHkqI6PMiucyf16iiwsHKUQ_I.js"></script>
     <link rel="stylesheet" href="style.css" />
@@ -29,30 +29,48 @@
         z-index: -1;
         pointer-events: none;
       }
+
+      .button-wrapper {
+        position: relative;
+      }
+
+      .button.primary {
+        text-align: center;
+        width: 100%;
+      }
+
+      #mute-button {
+        display: none;
+        text-align: center;
+        width: 100%;
+      }
     </style>
 
     <audio id="background-audio" src="song.mp3"></audio>
 
     <div class="button-wrapper">
       <a class="button primary" id="play-button">Music</a>
+      <a class="button primary" id="mute-button" style="display: none;">Mute</a>
     </div>
 
     <script>
       let isMusicButtonClicked = false;
+      let isMuted = false;
 
       const playButton = document.getElementById('play-button');
+      const muteButton = document.getElementById('mute-button');
       const audio = document.getElementById('background-audio');
 
       playButton.addEventListener('click', function () {
         if (!isMusicButtonClicked) {
           isMusicButtonClicked = true;
-
           audio.play();
-          playButton.style.display = 'none'; // Hide the button after clicking
+          playButton.style.display = 'none';
+          muteButton.style.display = 'inline-block';
 
           const oldVideo = document.querySelector('#video-background');
           if (oldVideo) {
-            oldVideo.parentNode.removeChild(oldVideo); // remove existing video element
+            oldVideo.parentNode.removeChild(oldVideo);
           }
 
           const newVideo = document.createElement('video');
@@ -68,6 +86,24 @@
           document.body.appendChild(newVideo);
         }
       });
+
+      muteButton.addEventListener('click', function () {
+        isMuted = !isMuted;
+        audio.muted = isMuted;
+        muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+      });
+
+      // Typing effect for the title
+      const titleElement = document.getElementById('typing-title');
+      const titleText = 'eye.navy';
+      let currentIndex = 0;
+
+      function updateTitle() {
+        titleElement.textContent = titleText.substring(0, currentIndex);
+        currentIndex = (currentIndex + 1) % (titleText.length + 1);
+      }
+
+      setInterval(updateTitle, 500);
     </script>
   </body>
 </html>
