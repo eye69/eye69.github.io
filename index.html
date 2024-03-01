@@ -42,18 +42,6 @@
         width: 100%;
       }
 
-      #stats-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 200px;
-        height: 120px;
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        padding: 10px;
-        z-index: 1000;
-      }
-
       canvas {
         width: 100%;
         height: 100%;
@@ -71,10 +59,6 @@
     <div class="button-wrapper">
       <a class="button primary" id="play-button">Music</a>
       <a class="button primary" id="mute-button" style="display: none;">Mute</a>
-    </div>
-
-    <div id="stats-container">
-      <canvas id="pingChart"></canvas>
     </div>
 
     <script>
@@ -128,68 +112,6 @@
       }
 
       setInterval(updateTitle, 500);
-    </script>
-
-    <script>
-      var pingData = [];
-      var chart;
-
-      function refreshStats() {
-        var newPing = Math.floor(Math.random() * 100) + 1;
-        pingData.push(newPing);
-
-        if (pingData.length > 10) {
-          pingData.shift();
-        }
-
-        updateChart();
-      }
-
-      function updateChart() {
-        if (!chart) {
-          var ctx = document.getElementById('pingChart').getContext('2d');
-          chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: Array.from({ length: 10 }, (_, i) => ''),
-              datasets: [
-                {
-                  label: 'Ping',
-                  data: pingData,
-                  borderColor: 'white',
-                  fill: false,
-                },
-              ],
-            },
-            options: {
-              scales: {
-                x: [
-                  {
-                    display: false,
-                  },
-                ],
-                y: [
-                  {
-                    ticks: {
-                      beginAtZero: true,
-                    },
-                  },
-                ],
-              },
-            },
-          });
-        } else {
-          chart.data.labels = Array.from({ length: 10 }, (_, i) => '');
-          chart.data.datasets[0].data = pingData;
-          chart.update();
-        }
-      }
-
-      setInterval(refreshStats, 1000);
-
-      window.onload = function () {
-        refreshStats(); // Initial refresh
-      };
     </script>
   </body>
 </html>
