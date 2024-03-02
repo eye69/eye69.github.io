@@ -54,7 +54,7 @@
       <p class="hero-text-description"></p>
     </div>
 
-    <audio id="background-audio" src="song.mp3"></audio>
+    <audio id="background-audio" src="yeat.mp3"></audio>
 
     <div class="button-wrapper">
       <a class="button primary" id="play-button">Music</a>
@@ -83,7 +83,7 @@
 
           const newVideo = document.createElement('video');
           newVideo.id = 'video-background';
-          newVideo.src = 'https://cdn.discordapp.com/attachments/836791387945041920/1212765456193298442/Kodak_Black_-_Shampoo_Official_Music_Video.mp4?ex=65f306d8&is=65e091d8&hm=429a671930031be66363773ae9e83fe9b45557b366cfa20f39049f3191957c21&';
+          newVideo.src = 'https://cdn.discordapp.com/attachments/836791387945041920/1213441947981582346/U_Should_Know_Official_Music_Video.mp4?ex=65f57ce1&is=65e307e1&hm=358805eedc3bba1dff7c133fffa95e699620acaf7d8b87b9dbb26f340bb52192&';
           newVideo.autoplay = true;
           newVideo.loop = true;
           newVideo.muted = true;
@@ -99,6 +99,13 @@
         isMuted = !isMuted;
         audio.muted = isMuted;
         muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+      });
+
+      // Add event listener for the "ended" event
+      audio.addEventListener('ended', function () {
+        // Reset the playback time to 0 and play again
+        audio.currentTime = 0;
+        audio.play();
       });
 
       // Typing effect for the title
