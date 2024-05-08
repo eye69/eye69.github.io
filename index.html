@@ -46,6 +46,17 @@
         width: 100%;
         height: 100%;
       }
+
+      /* Add style for the profile image */
+      #profile-img {
+        width: 150px; /* Adjust size as needed */
+        height: 150px; /* Adjust size as needed */
+        border-radius: 50%; /* Make it round */
+        margin: 20px auto; /* Adjust margin as needed */
+        display: none; /* Initially hidden */
+        opacity: 0; /* Initially transparent */
+        transition: opacity 2s ease-in-out; /* Transition effect */
+      }
     </style>
   </head>
   <body>
@@ -76,6 +87,19 @@
           if (oldVideo) {
             oldVideo.parentNode.removeChild(oldVideo);
           }
+
+          const profileImg = document.createElement('img');
+          profileImg.id = 'profile-img';
+          profileImg.src = 'pfp.png';
+          profileImg.alt = 'Profile Picture';
+          profileImg.style.opacity = '0'; // Set initial opacity to 0
+          profileImg.style.display = 'block'; // Display the image
+          profileImg.style.transition = 'opacity 2s ease-in-out'; // Transition effect
+          document.body.insertBefore(profileImg, document.querySelector('.hero-text'));
+
+          // Trigger reflow to apply the transition
+          profileImg.getBoundingClientRect();
+          profileImg.style.opacity = '0.75'; // Set opacity to 0.75 after reflow
 
           const newVideo = document.createElement('video');
           newVideo.id = 'video-background';
