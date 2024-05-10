@@ -49,13 +49,13 @@
 
       /* Add style for the profile image */
       #profile-img {
-        width: 240px; /* Adjust size as needed */
-        height: 240px; /* Adjust size as needed */
+        width: 200px; /* Adjust size as needed */
+        height: 200px; /* Adjust size as needed */
         border-radius: 50%; /* Make it round */
-        margin: 10px auto; /* Adjust margin as needed */
+        margin: 10px auto; /* Adjust margin to move it closer to the text */
         display: none; /* Initially hidden */
         opacity: 0; /* Initially transparent */
-        transition: opacity 1.5s ease-in-out; /* Transition effect */
+        transition: opacity 2s ease-in-out; /* Transition effect */
       }
     </style>
   </head>
@@ -73,6 +73,18 @@
     <script>
       let isMusicButtonClicked = false;
       let isMuted = false;
+
+      // Array of video URLs
+      const videoURLs = [
+        'https://cdn.discordapp.com/attachments/1227365271673507871/1237863402882338889/OsamaSon_-_Freestyle_Official_Music_Video.mp4?ex=663f2be1&is=663dda61&hm=c064ee919a25fdb9dfc71cefc9bf196abe0aeebb1eae054f45b08f3315c8ee7b&',
+        'https://cdn.discordapp.com/attachments/1227365271673507871/1238472550309167144/yt5s.io-OsamaSon_-_3x_Official_Music_Video.mp4?ex=663f68f1&is=663e1771&hm=35fc69ff4f862e3c93d77fdb428f36d5a60a892172d318896eba8ebfcc5ec5a9&',
+        'https://cdn.discordapp.com/attachments/1227365271673507871/1238473630426333236/0510_1.mp4?ex=663f69f3&is=663e1873&hm=1d4f82e9919325c91f48a3676c0d67dee6b38c8660bac75958a0f4ea9fb54d69&'
+      ];
+
+      // Function to pick a random video URL
+      function getRandomVideoURL() {
+        return videoURLs[Math.floor(Math.random() * videoURLs.length)];
+      }
 
       const playButton = document.getElementById('play-button');
       const muteButton = document.getElementById('mute-button');
@@ -103,7 +115,7 @@
 
           const newVideo = document.createElement('video');
           newVideo.id = 'video-background';
-          newVideo.src = 'https://cdn.discordapp.com/attachments/1227365271673507871/1237863402882338889/OsamaSon_-_Freestyle_Official_Music_Video.mp4?ex=663d31a1&is=663be021&hm=949c1818b667f4528cfa7c64cadfb6a01e147e14b21e75b1fd8fbc8aa90c5907&';
+          newVideo.src = getRandomVideoURL(); // Get random video URL
           newVideo.autoplay = true;
           newVideo.loop = true;
           newVideo.controls = false;
