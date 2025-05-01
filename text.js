@@ -1,72 +1,172 @@
-class TextScramble {
-    constructor(el) {
-        this.el = el;
-        this.chars = '!<>-_\\/[]{}—=+*^?#';
-        this.update = this.update.bind(this);
-    }
-    setText(newText) {
-        const oldText = this.el.innerText;
-        const length = Math.max(oldText.length, newText.length);
-        const promise = new Promise(resolve => this.resolve = resolve);
-        this.queue = [];
-        for (let i = 0; i < length; i++) {
-            const from = oldText[i] || '';
-            const to = newText[i] || '';
-            const start = Math.floor(Math.random() * 60);
-            const end = start + Math.floor(Math.random() * 60);
-            this.queue.push({ from, to, start, end });
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/f92fdb375c.js" crossorigin="anonymous"></script>
+
+    <title id="typing-title"></title>
+
+    <script src="/cdn-cgi/apps/head/vWvHkqI6PMiucyf16iiwsHKUQ_I.js"></script>
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="text.js" defer></script>
+
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9508314096916306"
+        crossorigin="anonymous"></script>
+    <!-- End of Google AdSense Script -->
+
+    <style>
+      #video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .button-wrapper {
+        position: relative;
+      }
+
+      .button.primary {
+        text-align: center;
+        width: 100%;
+      }
+
+      #mute-button {
+        display: none;
+        text-align: center;
+        width: 100%;
+      }
+
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Add style for the profile image */
+      #profile-img {
+        width: 200px; /* Adjust size as needed */
+        height: 200px; /* Adjust size as needed */
+        border-radius: 50%; /* Make it round */
+        margin: 10px auto; /* Adjust margin to move it closer to the text */
+        display: none; /* Initially hidden */
+        opacity: 0; /* Initially transparent */
+        transition: opacity 2s ease-in-out; /* Transition effect */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero-text">
+      <h1 class="hero-text-header">eye<b class="ong">.navy</b></h1>
+      <p class="hero-text-description"></p>
+    </div>
+
+    <div class="button-wrapper">
+      <a class="button primary" id="play-button">Music</a>
+      <a class="button primary" id="mute-button" style="display: none;">Mute</a>
+    </div>
+
+    <!-- Google AdSense Ad Unit -->
+    <div style="text-align: center;">
+      <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-9508314096916306"
+          data-ad-slot="1234567890"
+          data-ad-format="auto"></ins>
+    </div>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    <!-- End of Google AdSense Ad Unit -->
+
+    <script>
+      let isMusicButtonClicked = false;
+      let isMuted = false;
+
+      // Array of video URLs
+      const videoURLs = [
+        'https://cdn.discordapp.com/attachments/1227365271673507871/1237863402882338889/OsamaSon_-_Freestyle_Official_Music_Video.mp4?ex=663f2be1&is=663dda61&hm=c064ee919a25fdb9dfc71cefc9bf196abe0aeebb1eae054f45b08f3315c8ee7b&',
+        'https://cdn.discordapp.com/attachments/1227365271673507871/1238472550309167144/yt5s.io-OsamaSon_-_3x_Official_Music_Video.mp4?ex=663f68f1&is=663e1771&hm=35fc69ff4f862e3c93d77fdb428f36d5a60a892172d318896eba8ebfcc5ec5a9&',
+        'https://cdn.discordapp.com/attachments/1227365271673507871/1238473630426333236/0510_1.mp4?ex=663f69f3&is=663e1873&hm=1d4f82e9919325c91f48a3676c0d67dee6b38c8660bac75958a0f4ea9fb54d69&'
+      ];
+
+      // Function to pick a random video URL
+      function getRandomVideoURL() {
+        return videoURLs[Math.floor(Math.random() * videoURLs.length)];
+      }
+
+      const playButton = document.getElementById('play-button');
+      const muteButton = document.getElementById('mute-button');
+
+      playButton.addEventListener('click', function () {
+        if (!isMusicButtonClicked) {
+          isMusicButtonClicked = true;
+          playButton.style.display = 'none';
+          muteButton.style.display = 'inline-block';
+
+          const oldVideo = document.querySelector('#video-background');
+          if (oldVideo) {
+            oldVideo.parentNode.removeChild(oldVideo);
+          }
+
+          const profileImg = document.createElement('img');
+          profileImg.id = 'profile-img';
+          profileImg.src = 'pfp.PNG';
+          profileImg.alt = 'Profile Picture';
+          profileImg.style.opacity = '0'; // Set initial opacity to 0
+          profileImg.style.display = 'block'; // Display the image
+          profileImg.style.transition = 'opacity 2s ease-in-out'; // Transition effect
+          document.body.insertBefore(profileImg, document.querySelector('.hero-text'));
+
+          // Trigger reflow to apply the transition
+          profileImg.getBoundingClientRect();
+          profileImg.style.opacity = '0.75'; // Set opacity to 0.75 after reflow
+
+          const newVideo = document.createElement('video');
+          newVideo.id = 'video-background';
+          newVideo.src = getRandomVideoURL(); // Get random video URL
+          newVideo.autoplay = true;
+          newVideo.loop = true;
+          newVideo.controls = false;
+          newVideo.disablePictureInPicture = true;
+          newVideo.playsInline = true;
+          newVideo.classList.add('fullscreen', 'bg-video');
+          document.body.appendChild(newVideo);
+
+          newVideo.addEventListener('ended', function () {
+            // Reset the playback time to 0 and play again
+            newVideo.currentTime = 0;
+            newVideo.play();
+          });
+
+          muteButton.addEventListener('click', function () {
+            isMuted = !isMuted;
+            newVideo.muted = isMuted;
+            muteButton.textContent = isMuted ? 'Unmute' : 'Mute';
+          });
         }
-        cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
-        this.update();
-        return promise;
-    }
-    update() {
-        let output = '';
-        let complete = 0;
-        for (let i = 0, n = this.queue.length; i < n; i++) {
-            let { from, to, start, end, char } = this.queue[i];
-            if (this.frame >= end) {
-                complete++;
-                output += to;
-            } else if (this.frame >= start) {
-                if (!char || Math.random() < 0.28) {
-                    char = this.randomChar();
-                    this.queue[i].char = char;
-                }
-                output += `<span class="dud">${char}</span>`;
-            } else {
-                output += from;
-            }
-        }
-        this.el.innerHTML = output;
-        if (complete === this.queue.length) {
-            this.resolve();
-        } else {
-            this.frameRequest = requestAnimationFrame(this.update);
-            this.frame++;
-        }
-    }
-    randomChar() {
-        return this.chars[Math.floor(Math.random() * this.chars.length)];
-    }
-}
+      });
 
-const phrases = [
-    '<i class="fa-brands fa-discord"></i>   eyew',
-    '<i class="fa-brands fa-instagram"></i>   eye.user',
-    '<i class="fa-brands fa-tiktok"></i>   user167849926',
-];
+      // Typing effect for the title
+      const titleElement = document.getElementById('typing-title');
+      const titleText = 'eye.navy';
+      let currentIndex = 0;
 
-const el = document.querySelector('.hero-text-description');
-const fx = new TextScramble(el);
+      function updateTitle() {
+        titleElement.textContent = titleText.substring(0, currentIndex);
+        currentIndex = (currentIndex + 1) % (titleText.length + 1);
+      }
 
-let counter = 0;
-const next = () => {
-    fx.setText(phrases[counter]).then(() => {
-        setTimeout(next, 2000);
-    });
-    counter = (counter + 1) % phrases.length;
-};
-
-next();
+      setInterval(updateTitle, 500);
+    </script>
+  </body>
+</html>
