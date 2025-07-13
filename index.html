@@ -3,26 +3,247 @@
 <head>
   <meta charset="UTF-8" />
   <title>Reactive Orb Spline Embed</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .tabs {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      z-index: 9999;
+    }
+
+    .animated-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border: 3px solid #00b3b5;
+      font-size: 15px;
+      background-color: rgba(0, 179, 181, 0.08);
+      border-radius: 18px;
+      font-weight: 600;
+      color: #00e1e3;
+      box-shadow:
+        0 0 12px rgba(0, 179, 181, 0.4),
+        inset 0 0 0 rgba(255,255,255,0);
+      cursor: pointer;
+      overflow: hidden;
+      transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.4s ease,
+        transform 0.2s ease;
+      backdrop-filter: blur(12px) saturate(180%);
+      user-select: none;
+      outline: none;
+    }
+
+    .animated-button svg {
+      width: 20px;
+      fill: #00e1e3;
+      transition: fill 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .animated-button .text {
+      position: relative;
+      z-index: 1;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .animated-button:hover {
+      background-color: rgba(0, 179, 181, 0.2);
+      box-shadow:
+        0 0 20px rgba(0, 225, 227, 0.75),
+        inset 0 0 8px rgba(255, 255, 255, 0.05);
+      transform: scale(1.04);
+    }
+
+    .animated-button:active {
+      animation: blob 0.3s ease;
+      background-color: #00b3b5;
+      color: white;
+      box-shadow:
+        0 0 25px rgba(0, 255, 255, 0.6),
+        inset 0 0 10px rgba(255, 255, 255, 0.15);
+      transform: scale(0.96);
+    }
+
+    .animated-button.active {
+      background-color: #00e1e3;
+      color: #000;
+      border-color: #00ffff;
+      box-shadow:
+        0 0 22px #00ffff,
+        inset 0 0 10px rgba(0, 255, 255, 0.4);
+    }
+
+    .animated-button.active svg {
+      fill: #000;
+    }
+
+    @keyframes blob {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.07, 0.93); }
+      70% { transform: scale(0.95, 1.03); }
+      100% { transform: scale(1); }
+    }
+
+    main#content {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    iframe#content-iframe,
+    .page-content-iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+      visibility: visible; /* We'll toggle this */
+    }
+
+    /* Loader overlay */
+    #loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      display: none; /* hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    /* Simple loader animation */
+    .loader-spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #00b3b5;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 20px #00e1e3;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-  <div class="tabs">
-    <button class="tab active" data-page="home">Home</button>
-    <button class="tab" data-page="portfolio">Portfolio</button>
-    <button class="tab" data-page="contact">Contact</button>
-    <button class="tab" data-page="about">About</button>
+  <div class="tabs" role="tablist" aria-label="Main navigation tabs">
+    <button class="animated-button active" data-page="home" role="tab" aria-selected="true" tabindex="0" id="tab-home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"/>
+      </svg>
+      <span class="text">Home</span>
+    </button>
+    <button class="animated-button" data-page="portfolio" role="tab" aria-selected="false" tabindex="-1" id="tab-portfolio">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"/>
+      </svg>
+      <span class="text">Portfolio</span>
+    </button>
+    <button class="animated-button" data-page="contact" role="tab" aria-selected="false" tabindex="-1" id="tab-contact">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"/>
+      </svg>
+      <span class="text">Contact</span>
+    </button>
+    <button class="animated-button" data-page="about" role="tab" aria-selected="false" tabindex="-1" id="tab-about">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"/>
+      </svg>
+      <span class="text">About</span>
+    </button>
   </div>
 
-  <main id="content">
-    <!-- Home page: show Spline iframe -->
+  <main id="content" role="tabpanel" aria-live="polite" aria-labelledby="tab-home">
     <iframe
-      id="spline-iframe"
+      id="content-iframe"
       src="https://my.spline.design/reactiveorb-Y72LpSNUnaZgtqx6g6dFc3rM/"
       allowfullscreen
       frameborder="0"
+      title="Reactive Orb 3D Model"
     ></iframe>
   </main>
 
-  <script src="script.js"></script>
+  <!-- Loader overlay -->
+  <div id="loader">
+    <div class="loader-spinner" aria-label="Loading animation"></div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".animated-button");
+    const content = document.getElementById("content");
+    const iframe = document.getElementById("content-iframe");
+    const loader = document.getElementById("loader");
+
+    // Initial iframe src for home page saved for resetting
+    const homeIframeSrc = "https://my.spline.design/reactiveorb-Y72LpSNUnaZgtqx6g6dFc3rM/";
+
+    function setActiveTab(tab) {
+      tabs.forEach(t => {
+        t.classList.remove("active");
+        t.setAttribute("aria-selected", "false");
+        t.tabIndex = -1;
+      });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      tab.tabIndex = 0;
+      content.setAttribute("aria-labelledby", tab.id);
+    }
+
+    function loadPage(page) {
+      // Show loader overlay
+      loader.style.display = "flex";
+      // Hide iframe while loading new content
+      iframe.style.visibility = "hidden";
+
+      if(page === "home") {
+        iframe.src = homeIframeSrc;
+      } else {
+        // Assuming these pages are hosted on your domain
+        iframe.src = `${page}.html`;
+      }
+
+      // When iframe fully loads, hide loader and show iframe
+      iframe.onload = () => {
+        loader.style.display = "none";
+        iframe.style.visibility = "visible";
+      };
+    }
+
+    // Setup tab button click handlers
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        if(tab.classList.contains("active")) return; // Ignore clicking already active tab
+        setActiveTab(tab);
+        loadPage(tab.getAttribute("data-page"));
+      });
+    });
+
+    // Initial setup (home tab active, already loaded)
+    setActiveTab(document.querySelector(".animated-button.active"));
+  </script>
 </body>
 </html>
